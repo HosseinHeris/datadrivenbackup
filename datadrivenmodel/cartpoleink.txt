@@ -1,0 +1,58 @@
+# schema GameState
+#     Float32 position,
+#     Float32 velocity,
+#     Float32 angle,
+#     Float32 rotation
+# end
+
+schema GameState
+    Float32 state00,
+    Float32 state01,
+    Float32 state02,
+    Float32 state03,
+    Float32 state10,
+    Float32 state11,
+    Float32 state12,
+    Float32 state13
+    # Float32 state20,
+    # Float32 state21,
+    # Float32 state22,
+    # Float32 state23,
+    # Float32 state30,
+    # Float32 state31,
+    # Float32 state32,
+    # Float32 state33,
+end
+
+schema Action
+    Int8{0, 1} command
+end
+
+schema SimulatorConfig
+    Int8 episode_length,
+    UInt8 deque_size
+end
+
+simulator the_simulator(SimulatorConfig) 
+    action (Action)
+    state (GameState)
+end
+
+concept balance is classifier
+    predicts (Action)
+    follows input(GameState)
+    feeds output
+end
+
+curriculum balance_curriculum
+    train balance
+    with simulator the_simulator
+    objective open_ai_gym_default_objective
+
+        lesson balancing
+            configure
+                constrain episode_length with Int8{-1},
+                constrain deque_size with UInt8{1}
+            until
+                maximize open_ai_gym_default_objective
+end

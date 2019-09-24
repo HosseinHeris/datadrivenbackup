@@ -1,0 +1,1 @@
+{"brains": [{"name": "cartepole-dd", "default": false}, {"name": "cartepole-dd2", "default": false}, {"name": "cartepole-lstm", "default": false}, {"name": "ant-datadriven", "default": true}]}
